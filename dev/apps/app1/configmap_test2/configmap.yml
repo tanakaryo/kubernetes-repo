@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: test-params
+data:
+  john.name: John.Lucas
+  john.age: twenty-fifth
+  john.country: Detroit
+  john.friend.name: Carla.Mcdonald
+  john.friend.age: eighteen
+  john.friend.country: NewYork
