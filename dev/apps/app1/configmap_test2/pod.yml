@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test
+spec:
+  containers:
+  - name: test
+    image: nginx:alpine
+    env:
+    - name: john.name
+      valueFrom:
+        configMapKeyRef:
+          name: test-params
+          key: john.name
+    - name: john.age
+      valueFrom:
+        configMapKeyRef:
+          name: test-params
+          key: john.age
