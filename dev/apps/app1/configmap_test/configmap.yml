@@ -1,0 +1,74 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap-sample
+data:
+  nginx.config: |
+    pid /var/run/nginx.pid;
+
+    events {
+        worker_connections 3;
+    }
+
+    http {
+        server {
+            root /usr/share/nginx/html;
+        }
+    }
+  nginx.html: |
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>Welcome to nginx!</title>
+      </head>
+      <body>
+        <h1>Nginx Home Page for ConfigMap!</h1>
+        <p>This page is nginx page for sample of ConfigMap.</p>
+        <p>My Profile</p>
+        <p><a href="https://github.com/tamago0224">My Github</a>
+        <p><a href="https://twitter.com/tamago_0224">My Twitter</a>
+      </body>
+    </html>
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: configmap-sample-pod
+  labels:
+    app: configmap-sample-pod
+spec:
+  containers:
+  - name: nginx-pod
+    image: nginx:1.23
+    volumeMounts:
+    - name: nginx-config
+      mountPath: "/etc/nginx"
+      readOnly: true
+    - name: nginx-data
+      mountPath: "/usr/share/nginx/html"
+      readOnly: true
+  volumes:
+  - name: nginx-config
+    configMap:
+      name: configmap-sample
+      items:
+      - key: "nginx.config"
+        path: "nginx.conf"
+  - name: nginx-data
+    configMap:
+      name: configmap-sample
+      items:
+      - key: "nginx.html"
+        path: "index.html"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: configmap-service-nginx
+spec:
+  selector:
+    app: configmap-sample-pod
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 80
