@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: test-job
+  labels:
+    app: test-job
+spec:
+  template:
+    metadata:
+      labels:
+        app: test-job
+    spec:
+      containers:
+      - name: busybox
+        image: busybox:latest
+        command: [ "sh", "-c", "sleep 5; exit 0" ]
+      restartPolicy: Never
+  completions: 6
+  parallelism: 2
